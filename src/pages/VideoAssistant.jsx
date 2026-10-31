@@ -81,7 +81,8 @@ const demonstrations = [
     subtitle: "THE USER EXPERIENCE",
     description:
       "Explore the application interface and see how Video Assistant can be used to process videos.",
-    video: "/videos/video-assistant-app.mp4",
+    
+    video: "https://res.cloudinary.com/grhd7l1r/video/upload/video-assistant-app.mp4",
     tag: "APPLICATION / UI",
   },
 ];
