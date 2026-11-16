@@ -12,6 +12,7 @@ const videos = [
     youtubeId: "Wjgg3IM3MlQ",
     number: "01",
   },
+  /*
   {
     id: "video-2",
     title: "MIAMI",
@@ -20,6 +21,7 @@ const videos = [
     youtubeId: "oRZ5p8ILF6Q",
     number: "02",
   },
+  */
   {
     id: "video-3",
     title: "New York",
