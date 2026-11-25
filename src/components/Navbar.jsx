@@ -10,7 +10,7 @@ const Navbar = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8 }}
     >
-      <a href="/" className="logo">
+      <a href="/" className="logo" translate="no">
         CYRIAC<span>.</span>
       </a>
 

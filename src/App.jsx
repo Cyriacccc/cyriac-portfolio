@@ -86,6 +86,7 @@ function HomePage() {
           >
             <m.span
               className="hero-name"
+              translate="no"
               variants={{
                 hidden: { opacity: 0, y: 20 },
                 visible: {
@@ -580,7 +581,7 @@ function HomePage() {
         id="contact"
         className="footer"
       >
-        <span>
+        <span translate="no">
           CYRIAC<span className="orange-text">.</span>
         </span>
 
@@ -610,7 +611,7 @@ function HomePage() {
   </a>
 </div>
         <small>
-          © 2026 — CYRIAC DUPOUEY
+          © 2026 — <span translate="no">CYRIAC DUPOUEY</span>
         </small>
       </footer>
     </main>

@@ -507,7 +507,7 @@ export default function ProjectPage() {
           RETOUR AU PORTFOLIO
         </Link>
 
-        <span>CYRIAC DUPOUEY · 2026</span>
+        <span><span translate="no">CYRIAC DUPOUEY</span> · 2026</span>
       </footer>
     </main>
   );
