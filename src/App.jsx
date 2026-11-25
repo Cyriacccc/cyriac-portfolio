@@ -5,7 +5,7 @@ import {
   Link,
 } from "react-router-dom";
 
-import { motion } from "framer-motion";
+import { m, MotionConfig, LazyMotion, domAnimation } from "framer-motion";
 
 import {
   ArrowDown,
@@ -16,10 +16,16 @@ import {
   Phone,
 } from "lucide-react";
 
+import { lazy, Suspense } from "react";
+
 import VideoGallery from "./components/VideoGallery";
-import VideoAssistant from "./pages/VideoAssistant";
 import CursorGlow from "./components/CursorGlow";
 import Navbar from "./components/Navbar";
+import HeroVideo from "./components/HeroVideo";
+
+// Pages projet chargées seulement quand on les ouvre (JS séparé).
+// Leur contenu est dans src/data/projects.js.
+const ProjectPage = lazy(() => import("./pages/ProjectPage"));
 
 import "./styles/global.css";
 
@@ -31,21 +37,8 @@ function HomePage() {
 
       {/* HERO */}
       <section className="hero" id="home">
-        {/* Vidéo cinématique en arrière-plan */}
-        <video
-          className="hero-video"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          aria-hidden="true"
-        >
-          <source
-            src="/hero-background.mp4"
-            type="video/mp4"
-          />
-        </video>
+        {/* Vidéo cinématique en arrière-plan, avec bouton pause */}
+        <HeroVideo />
 
         {/* Voile sombre */}
         <div
@@ -60,7 +53,7 @@ function HomePage() {
         />
 
         {/* Contenu principal */}
-        <motion.div
+        <m.div
           className="hero-content"
           initial={{ opacity: 0, y: 28 }}
           animate={{ opacity: 1, y: 0 }}
@@ -72,11 +65,11 @@ function HomePage() {
         >
           <div className="availability">
             <span className="status-dot" />
-            ÉTUDIANT INGÉNIEUR · RECHERCHE DE STAGE 3A
+            ÉLÈVE INGÉNIEUR IA · STAGE DE FIN D'ÉTUDES DÈS FÉVRIER 2027
           </div>
 
           {/* Titre animé */}
-          <motion.h1
+          <m.h1
             initial="hidden"
             animate="visible"
             variants={{
@@ -88,7 +81,22 @@ function HomePage() {
               },
             }}
           >
-            <motion.span
+            <m.span
+              className="hero-name"
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transition: { duration: 0.7, ease: "easeOut" },
+                },
+              }}
+            >
+              Cyriac Dupouey
+            </m.span>
+            <span className="visually-hidden"> — </span>
+
+            <m.span
               className="title-line"
               variants={{
                 hidden: {
@@ -108,9 +116,9 @@ function HomePage() {
               }}
             >
               ENGINEERING
-            </motion.span>
+            </m.span>
 
-            <motion.span
+            <m.span
               className="title-line outline-text"
               variants={{
                 hidden: {
@@ -131,9 +139,9 @@ function HomePage() {
               }}
             >
               MEETS
-            </motion.span>
+            </m.span>
 
-            <motion.span
+            <m.span
               className="title-line orange-text"
               variants={{
                 hidden: {
@@ -154,16 +162,16 @@ function HomePage() {
               }}
             >
               CREATIVITY.
-            </motion.span>
-          </motion.h1>
+            </m.span>
+          </m.h1>
 
           {/* Description et boutons */}
           <div className="hero-bottom">
             <p className="hero-description">
-              Étudiant ingénieur à l'ENSC Bordeaux INP, je développe
-              des projets à la croisée de l'intelligence artificielle,
-              de la vision par ordinateur et de la création audiovisuelle.
-              Je recherche un stage de 3A pour mettre ces compétences en pratique.
+              Élève ingénieur en dernière année à l'ENSC Bordeaux INP,
+              spécialité Intelligence Artificielle. Passionné par le machine
+              learning et les LLM, je recherche un stage de fin d'études de
+              6 mois en IA / machine learning à partir de février 2027.
             </p>
 
             <div className="hero-actions">
@@ -220,7 +228,7 @@ function HomePage() {
               </a>
             </div>
           </div>
-        </motion.div>
+        </m.div>
 
         {/* Informations en bas de l'écran */}
         <div className="hero-index">
@@ -255,13 +263,13 @@ function HomePage() {
           </div>
 
           <p>
-            Des idées transformées en projets concrets, entre programmation,
-            intelligence artificielle et expérimentation.
+            Des idées transformées en projets concrets, des agents basés
+            sur les LLM au traitement automatique de vidéos.
           </p>
         </div>
 
         {/* Projet principal */}
-        <motion.article
+        <m.article
           className="featured-project"
           initial={{
             opacity: 0,
@@ -347,11 +355,68 @@ function HomePage() {
               </a>
             </div>
           </div>
-        </motion.article>
+        </m.article>
+
+        {/* Dispute Agent — stage recherche au Laboratoire de Cyberjustice */}
+        <m.article
+          className="featured-project"
+          initial={{ opacity: 0, y: 60, scale: 0.97 }}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <div className="project-visual">
+            <div className="visual-overlay" />
+
+            <div className="visual-label">
+              <span className="status-dot" />
+              LLM / MULTI-AGENT SYSTEMS
+            </div>
+
+            <div className="visual-center">
+              <span className="visual-symbol">DA.</span>
+              <span className="visual-caption">AI MEDIATION RESEARCH</span>
+            </div>
+
+            <span className="visual-number">PROJECT 002</span>
+          </div>
+
+          <div className="project-information">
+            <div className="project-meta">
+              <span>STAGE RECHERCHE · CYBERJUSTICE</span>
+              <span>2026</span>
+            </div>
+
+            <h3>Dispute Agent</h3>
+
+            <p>
+              Framework de simulation multi-agents développé au Laboratoire
+              de Cyberjustice (Montréal) : des agents LLM négocient un litige,
+              avec ou sans médiateur IA, puis un jury de trois LLM évalue la
+              qualité de la médiation. Sur 90 négociations pilotes, la
+              médiation améliore nettement la qualité des accords.
+            </p>
+
+            <div className="tech-stack">
+              <span>Python</span>
+              <span>LLM</span>
+              <span>Multi-agents</span>
+              <span>FastAPI</span>
+            </div>
+
+            <div className="hero-actions">
+              <Link to="/projects/dispute-agent" className="project-link">
+                Découvrir le projet
+                <ArrowUpRight size={18} />
+              </Link>
+            </div>
+          </div>
+        </m.article>
+
       </section>
 
       {/* CREATIVE */}
-      <motion.section
+      <m.section
         className="creative-section"
         id="creative"
         initial={{
@@ -393,10 +458,10 @@ function HomePage() {
           Me contacter pour en discuter
           <ArrowUpRight size={18} />
         </a>
-      </motion.section>
+      </m.section>
 
       {/* ABOUT */}
-      <motion.section
+      <m.section
         className="about-section"
         id="about"
         initial={{
@@ -425,12 +490,37 @@ function HomePage() {
         </h2>
 
         <p>
-          Étudiant ingénieur à l'ENSC Bordeaux INP, je m'intéresse
-          aux applications concrètes de l'informatique, à l'intelligence
-          artificielle et au traitement vidéo. J'aime concevoir des outils
-          qui associent résolution de problèmes techniques et expérience
-          visuelle, de l'analyse automatisée de vidéos au montage audiovisuel.
+          Étudiant ingénieur en dernière année à l'ENSC (Bordeaux INP),
+          spécialité Intelligence Artificielle, je conçois des agents
+          intelligents basés sur des modèles de langage et leurs pipelines
+          de traitement. Formé à concevoir des systèmes d'IA centrés sur
+          l'humain, je garde aussi un pied dans la création audiovisuelle :
+          courts métrages, montage vidéo et voyages.
         </p>
+
+        <ul className="experience-list">
+          <li>
+            <span className="experience-date">MAI — JUIL. 2026</span>
+            <div>
+              <h3>Laboratoire de Cyberjustice — Montréal</h3>
+              <p>
+                Stagiaire recherche : conception et développement d'un agent
+                IA de prise de décision, et étude des dynamiques de
+                comportement au sein de systèmes multi-agents.
+              </p>
+            </div>
+          </li>
+          <li>
+            <span className="experience-date">JUIL. — AOÛT 2025</span>
+            <div>
+              <h3>DB Alternative</h3>
+              <p>
+                Stagiaire : traitement de données géoréférencées d'obstacles
+                aéronautiques (SIA), revue et analyse du code d'un site web.
+              </p>
+            </div>
+          </li>
+        </ul>
 
         <a
           href="/CV-Cyriac-Dupouey.pdf"
@@ -441,7 +531,7 @@ function HomePage() {
           Télécharger mon CV
           <ArrowUpRight size={17} />
         </a>
-      </motion.section>
+      </m.section>
 
       {/* FOOTER / CONTACT */}
       <footer
@@ -457,12 +547,12 @@ function HomePage() {
         </p>
 
         <div className="contact-details">
-  <a href="mailto:cdupouey@ensc.fr">
+  <a href="mailto:cyriacd35@gmail.com">
     <Mail size={18} />
-    <span>cdupouey@ensc.fr</span>
+    <span>cyriacd35@gmail.com</span>
   </a>
 
-  <a href="tel:+330783939893">
+  <a href="tel:+33783939893">
     <Phone size={18} />
     <span>07 83 93 98 93</span>
   </a>
@@ -477,23 +567,22 @@ function HomePage() {
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route
-          path="/"
-          element={<HomePage />}
-        />
-
-        <Route
-          path="/projects/video-assistant"
-          element={<VideoAssistant />}
-        />
-
-        <Route
-          path="*"
-          element={<HomePage />}
-        />
-      </Routes>
-    </BrowserRouter>
+    // LazyMotion + composants <m.*> : on n'embarque que les fonctions
+    // d'animation utilisées (domAnimation) au lieu de tout framer-motion.
+    // reducedMotion="user" : désactive les animations de transformation
+    // pour les personnes ayant activé « réduire les animations » sur leur système.
+    <LazyMotion features={domAnimation} strict>
+      <MotionConfig reducedMotion="user">
+        <BrowserRouter>
+          <Suspense fallback={<div className="page-loading" aria-busy="true" />}>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/projects/:slug" element={<ProjectPage />} />
+              <Route path="*" element={<HomePage />} />
+            </Routes>
+          </Suspense>
+        </BrowserRouter>
+      </MotionConfig>
+    </LazyMotion>
   );
 }

@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
+import { m, AnimatePresence } from "framer-motion";
+import Modal from "./Modal";
 import { Play, X, ArrowUpRight } from "lucide-react";
 import "../styles/global.css";
 
@@ -458,29 +459,7 @@ function VideoGallery() {
     ? editingSteps[breakdownVideo.id] || editingSteps["video-1"]
     : [];
 
-  useEffect(() => {
-    const isModalOpen =
-      selectedVideo !== null || breakdownVideo !== null;
-
-    if (!isModalOpen) return undefined;
-
-    const previousOverflow = document.body.style.overflow;
-
-    const handleKeyDown = (event) => {
-      if (event.key === "Escape") {
-        setSelectedVideo(null);
-        setBreakdownVideo(null);
-      }
-    };
-
-    document.body.style.overflow = "hidden";
-    document.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [selectedVideo, breakdownVideo]);
+  // Échap, focus et blocage du défilement sont gérés par <Modal>.
 
   const openBreakdown = (video) => {
     setActiveStep(0);
@@ -499,7 +478,7 @@ function VideoGallery() {
     <section className="video-gallery section" id="video-gallery">
       <div className="video-gallery-inner">
         {/* EN-TÊTE */}
-        <motion.div
+        <m.div
           className="video-gallery-heading"
           initial={{ opacity: 0, y: 45, filter: "blur(8px)" }}
           whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -526,12 +505,12 @@ function VideoGallery() {
             Des voyages aux projets personnels, j’explore le montage vidéo
             comme un moyen de raconter des histoires et de créer des émotions.
           </p>
-        </motion.div>
+        </m.div>
 
         {/* GALERIE */}
         <div className="video-gallery-grid">
           {videos.map((video, index) => (
-            <motion.div
+            <m.div
               key={video.id}
               className={`video-card-wrapper ${
                 index === 0 ? "video-card-wrapper-featured" : ""
@@ -555,7 +534,7 @@ function VideoGallery() {
                 ease: [0.16, 1, 0.3, 1],
               }}
             >
-              <motion.button
+              <m.button
                 type="button"
                 className={`video-card ${
                   index === 0 ? "video-card-featured" : ""
@@ -619,7 +598,7 @@ function VideoGallery() {
 
                   <div className="video-card-overlay" />
 
-                  <motion.span
+                  <m.span
                     className="video-card-number"
                     animate={{
                       y: hoveredVideo === video.id ? -5 : 0,
@@ -627,10 +606,10 @@ function VideoGallery() {
                     transition={{ duration: 0.3 }}
                   >
                     {video.number}
-                  </motion.span>
+                  </m.span>
 
                   {/* Pas de bouton Play visible au survol */}
-                  <motion.span
+                  <m.span
                     className="video-card-play"
                     animate={{
                       opacity: hoveredVideo === video.id ? 0 : 1,
@@ -640,13 +619,13 @@ function VideoGallery() {
                     aria-hidden="true"
                   >
                     <Play size={21} fill="currentColor" />
-                  </motion.span>
+                  </m.span>
 
                   <span className="video-card-open">
                     <ArrowUpRight size={19} />
                   </span>
 
-                  <motion.div
+                  <m.div
                     className="video-card-content"
                     animate={{
                       y: hoveredVideo === video.id ? -8 : 0,
@@ -661,12 +640,12 @@ function VideoGallery() {
                     </span>
                     <h3>{video.title}</h3>
                     <p>{video.description}</p>
-                  </motion.div>
+                  </m.div>
                 </div>
-              </motion.button>
+              </m.button>
 
               {/* EXPLORE THE PROCESS POUR LES TROIS VIDÉOS */}
-              <motion.button
+              <m.button
                 type="button"
                 className="video-breakdown-trigger"
                 onClick={() => openBreakdown(video)}
@@ -683,13 +662,13 @@ function VideoGallery() {
                 </span>
 
                 <ArrowUpRight size={19} />
-              </motion.button>
-            </motion.div>
+              </m.button>
+            </m.div>
           ))}
         </div>
 
         {/* PIED DE GALERIE */}
-        <motion.div
+        <m.div
           className="video-gallery-footer"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -698,20 +677,21 @@ function VideoGallery() {
         >
           <span>SELECTED WORKS</span>
           <span>VIDEO EDITING · STORYTELLING · COLOR GRADING</span>
-        </motion.div>
+        </m.div>
       </div>
 
       {/* LECTEUR VIDÉO */}
       <AnimatePresence>
         {selectedVideo && (
-          <motion.div
+          <Modal
             className="video-modal"
+            label={`Lecteur vidéo : ${selectedVideo.title}`}
+            onClose={closeVideo}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={closeVideo}
           >
-            <motion.div
+            <m.div
               className="video-modal-content"
               initial={{
                 opacity: 0,
@@ -735,10 +715,6 @@ function VideoGallery() {
                 duration: 0.45,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              onClick={(event) => event.stopPropagation()}
-              role="dialog"
-              aria-modal="true"
-              aria-label={`Lecteur vidéo : ${selectedVideo.title}`}
             >
               <button
                 type="button"
@@ -761,33 +737,34 @@ function VideoGallery() {
               <div className="video-modal-caption">
                 <div>
                   <span>{selectedVideo.category}</span>
-                  <motion.h3
+                  <m.h3
                     key={selectedVideo.id}
                     initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.15 }}
                   >
                     {selectedVideo.title}
-                  </motion.h3>
+                  </m.h3>
                 </div>
                 <p>{selectedVideo.description}</p>
               </div>
-            </motion.div>
-          </motion.div>
+            </m.div>
+          </Modal>
         )}
       </AnimatePresence>
 
       {/* FENÊTRE INTERACTIVE : PROCESSUS DE CRÉATION */}
       <AnimatePresence>
         {breakdownVideo && (
-          <motion.div
+          <Modal
             className="breakdown-modal"
+            label={`Behind the Film — ${breakdownVideo.title}`}
+            onClose={closeBreakdown}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={closeBreakdown}
           >
-            <motion.div
+            <m.div
               className="breakdown-panel"
               initial={{ opacity: 0, y: 35, scale: 0.97 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -796,10 +773,6 @@ function VideoGallery() {
                 duration: 0.4,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              onClick={(event) => event.stopPropagation()}
-              role="dialog"
-              aria-modal="true"
-              aria-label={`Behind the Film — ${breakdownVideo.title}`}
             >
               <button
                 type="button"
@@ -812,14 +785,14 @@ function VideoGallery() {
 
               {/* EN-TÊTE */}
               <div className="breakdown-header">
-                <motion.span
+                <m.span
                   className="breakdown-eyebrow"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 }}
                 >
                   CREATIVE PROCESS / {breakdownVideo.number}
-                </motion.span>
+                </m.span>
 
                 <h2>
                   BEHIND
@@ -892,7 +865,7 @@ function VideoGallery() {
                 {/* DESCRIPTION ANIMÉE */}
                 <div className="breakdown-description">
                   <AnimatePresence mode="wait">
-                    <motion.div
+                    <m.div
                       key={`${breakdownVideo.id}-${activeStep}`}
                       initial={{
                         opacity: 0,
@@ -937,7 +910,7 @@ function VideoGallery() {
                             <ArrowUpRight size={17} />
                           </a>
                         )}
-                    </motion.div>
+                    </m.div>
                   </AnimatePresence>
 
                   <div className="breakdown-navigation">
@@ -994,8 +967,8 @@ function VideoGallery() {
                   </span>
                 </div>
               </div>
-            </motion.div>
-          </motion.div>
+            </m.div>
+          </Modal>
         )}
       </AnimatePresence>
     </section>

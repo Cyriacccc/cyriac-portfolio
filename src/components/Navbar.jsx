@@ -1,10 +1,10 @@
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 
 const Navbar = () => {
   return (
-    <motion.header
+    <m.header
       className="navbar"
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -23,7 +23,7 @@ const Navbar = () => {
       <a href="#contact" className="contact-link">
         Me contacter <ArrowUpRight size={16} />
       </a>
-    </motion.header>
+    </m.header>
   );
 };
 
