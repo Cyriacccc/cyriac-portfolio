@@ -36,6 +36,10 @@ for (const route of routes) {
     html = replaceOnce(html, /(<meta\s+property="og:description"\s+content=")[^"]*(")/, `$1${description}$2`, "og:description");
   }
 
+  if (route.noindex) {
+    html = replaceOnce(html, /<\/head>/, `  <meta name="robots" content="noindex" />\n  </head>`, "</head>");
+  }
+
   const out = path.join(dist, route.file);
   fs.mkdirSync(path.dirname(out), { recursive: true });
   fs.writeFileSync(out, html);

@@ -17,6 +17,10 @@ export const routes = [
   })),
 ].map((route) => ({ ...route, canonical: `${SITE_URL}${route.url}` }));
 
+// Page servie par Vercel (statut 404) pour toute adresse inconnue : la route
+// « * » affiche l'accueil, mais la page est exclue de l'indexation.
+routes.push({ url: "/404", file: "404.html", canonical: `${SITE_URL}/`, noindex: true });
+
 export async function render(url) {
   const { prelude } = await prerenderToNodeStream(
     <StrictMode>
