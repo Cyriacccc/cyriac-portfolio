@@ -5247,3 +5247,221 @@ dialog.modal-dialog::backdrop {
 .va-results-section .va-pipeline-note {
   margin-top: 28px;
 }
+
+/* =========================================
+   ANIMATIONS DES CARTES PROJET (src/components/ProjectVisuals.jsx)
+   ========================================= */
+
+.visual-center-anim {
+  width: 100%;
+}
+
+.pv {
+  width: 100%;
+  max-width: 440px;
+}
+
+.pv svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.pv-mono {
+  fill: #7d7d7d;
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: 1px;
+}
+
+.pv-accent {
+  fill: #ff6b35;
+}
+
+.pv.is-paused * {
+  animation-play-state: paused !important;
+}
+
+/* --- Video Assistant --- */
+
+.pv-frame {
+  fill: rgba(255, 255, 255, 0.04);
+  stroke: rgba(255, 255, 255, 0.18);
+}
+
+.pv-frame-hit {
+  fill: #ff5c20;
+  stroke: #ff8a5c;
+  opacity: 0.15;
+  animation: pv-frame-hit 6s linear infinite;
+}
+
+.pv-axis {
+  stroke: rgba(255, 255, 255, 0.15);
+}
+
+.pv-area {
+  fill: url(#va-area);
+}
+
+.pv-line {
+  fill: none;
+  stroke: #cfcfcf;
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+}
+
+.pv-threshold {
+  stroke: #ff6b35;
+  stroke-dasharray: 4 4;
+  stroke-width: 1;
+  opacity: 0.8;
+}
+
+.pv-playhead {
+  animation: pv-scan 6s linear infinite;
+}
+
+.pv-playhead line {
+  stroke: #ffffff;
+  stroke-width: 1;
+  opacity: 0.7;
+}
+
+.pv-playhead circle {
+  fill: #ffffff;
+}
+
+@keyframes pv-scan {
+  from { transform: translateX(0); }
+  to { transform: translateX(400px); }
+}
+
+@keyframes pv-frame-hit {
+  0% { opacity: 0.15; }
+  3% { opacity: 1; }
+  25% { opacity: 0.8; }
+  45%, 100% { opacity: 0.15; }
+}
+
+/* --- Dispute Agent --- */
+
+.pv-edge {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.14);
+  stroke-width: 1;
+}
+
+.pv-edge-main {
+  stroke-dasharray: 3 5;
+}
+
+.pv-edge-jury {
+  stroke-dasharray: 2 4;
+}
+
+.pv-node {
+  fill: #151515;
+  stroke: rgba(255, 255, 255, 0.28);
+  stroke-width: 1.2;
+}
+
+.pv-node-mediator {
+  stroke: #ff6b35;
+}
+
+.pv-node-party {
+  animation: pv-agree 8s infinite;
+}
+
+.pv-node-letter {
+  fill: #eaeaea;
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.pv-msg {
+  fill: #f2f0eb;
+  opacity: 0;
+  animation: pv-travel 8s ease-in-out infinite;
+}
+
+.pv-msg-mediator {
+  fill: #ff6b35;
+}
+
+.pv-agreement {
+  opacity: 0;
+  animation: pv-agreement 8s infinite;
+}
+
+.pv-agreement rect {
+  fill: #1d130f;
+  stroke: #ff6b35;
+}
+
+.pv-agreement text {
+  fill: #ff8a5c;
+}
+
+.pv-judge {
+  fill: #2a2a2a;
+  stroke: rgba(255, 255, 255, 0.25);
+  animation: pv-judge 8s infinite;
+}
+
+@keyframes pv-travel {
+  0% { opacity: 0; transform: translate(0, 0); }
+  1.5% { opacity: 1; }
+  10% { opacity: 1; transform: translate(var(--dx), var(--dy)); }
+  12%, 100% { opacity: 0; transform: translate(var(--dx), var(--dy)); }
+}
+
+@keyframes pv-agree {
+  0%, 66% { fill: #151515; stroke: rgba(255, 255, 255, 0.28); }
+  70%, 92% { fill: rgba(255, 92, 32, 0.22); stroke: #ff6b35; }
+  97%, 100% { fill: #151515; stroke: rgba(255, 255, 255, 0.28); }
+}
+
+@keyframes pv-agreement {
+  0%, 66% { opacity: 0; }
+  70%, 92% { opacity: 1; }
+  97%, 100% { opacity: 0; }
+}
+
+@keyframes pv-judge {
+  0%, 74% { fill: #2a2a2a; }
+  78%, 94% { fill: #ff6b35; }
+  98%, 100% { fill: #2a2a2a; }
+}
+
+/* « Réduire les animations » : image fixe montrant l'état final */
+@media (prefers-reduced-motion: reduce) {
+  .pv * {
+    animation: none !important;
+  }
+
+  .pv-playhead,
+  .pv-msg {
+    display: none;
+  }
+
+  .pv-frame-hit {
+    opacity: 0.9;
+  }
+
+  .pv-agreement {
+    opacity: 1;
+  }
+
+  .pv-node-party {
+    fill: rgba(255, 92, 32, 0.22);
+    stroke: #ff6b35;
+  }
+
+  .pv-judge {
+    fill: #ff6b35;
+  }
+}

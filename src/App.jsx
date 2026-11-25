@@ -22,6 +22,7 @@ import VideoGallery from "./components/VideoGallery";
 import CursorGlow from "./components/CursorGlow";
 import Navbar from "./components/Navbar";
 import HeroVideo from "./components/HeroVideo";
+import { VideoAssistantVisual, DisputeAgentVisual } from "./components/ProjectVisuals";
 
 // Pages projet chargées seulement quand on les ouvre (JS séparé).
 // Leur contenu est dans src/data/projects.js.
@@ -298,14 +299,9 @@ function HomePage() {
               PYTHON / COMPUTER VISION
             </div>
 
-            <div className="visual-center">
-              <span className="visual-symbol">
-                VA.
-              </span>
-
-              <span className="visual-caption">
-                AUTOMATED VIDEO HIGHLIGHTS
-              </span>
+            <div className="visual-center visual-center-anim">
+              <VideoAssistantVisual />
+              <span className="visual-caption">AUTOMATED VIDEO HIGHLIGHTS</span>
             </div>
 
             <span className="visual-number">
@@ -373,8 +369,8 @@ function HomePage() {
               LLM / MULTI-AGENT SYSTEMS
             </div>
 
-            <div className="visual-center">
-              <span className="visual-symbol">DA.</span>
+            <div className="visual-center visual-center-anim">
+              <DisputeAgentVisual />
               <span className="visual-caption">AI MEDIATION RESEARCH</span>
             </div>
 
