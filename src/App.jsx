@@ -23,6 +23,8 @@ import CursorGlow from "./components/CursorGlow";
 import Navbar from "./components/Navbar";
 import HeroVideo from "./components/HeroVideo";
 import { VideoAssistantVisual, DisputeAgentVisual } from "./components/ProjectVisuals";
+import { GithubIcon, LinkedinIcon } from "./components/BrandIcons";
+import { skills } from "./data/skills";
 
 // Pages projet chargées seulement quand on les ouvre (JS séparé).
 // Leur contenu est dans src/data/projects.js.
@@ -211,7 +213,7 @@ function HomePage() {
                 className="hero-social-button"
                 aria-label="Consulter mon profil GitHub"
               >
-                <ArrowUpRight size={18} />
+                <GithubIcon size={16} />
                 <span>GITHUB</span>
                 <ArrowUpRight size={15} />
               </a>
@@ -223,7 +225,7 @@ function HomePage() {
                 className="hero-social-button"
                 aria-label="Consulter mon profil LinkedIn"
               >
-                <ArrowUpRight size={18} />
+                <LinkedinIcon size={16} />
                 <span>LINKEDIN</span>
                 <ArrowUpRight size={15} />
               </a>
@@ -234,7 +236,7 @@ function HomePage() {
         {/* Informations en bas de l'écran */}
         <div className="hero-index">
           <span>PORTFOLIO — 2026</span>
-          <span>01 / 05</span>
+          <span>BORDEAUX · FRANCE</span>
         </div>
 
         {/* Indicateur de défilement */}
@@ -243,7 +245,7 @@ function HomePage() {
           className="scroll-indicator"
         >
           <ArrowDown size={16} />
-          <span>SCROLL TO EXPLORE</span>
+          <span>DÉFILER POUR EXPLORER</span>
         </a>
       </section>
 
@@ -255,11 +257,11 @@ function HomePage() {
         <div className="section-heading">
           <div>
             <span className="eyebrow">
-              01 — ENGINEERING
+              01 — INGÉNIERIE
             </span>
 
             <h2>
-              Selected projects<span>.</span>
+              Projets sélectionnés<span>.</span>
             </h2>
           </div>
 
@@ -296,22 +298,22 @@ function HomePage() {
 
             <div className="visual-label">
               <span className="status-dot" />
-              PYTHON / COMPUTER VISION
+              PYTHON / VISION PAR ORDINATEUR
             </div>
 
             <div className="visual-center visual-center-anim">
               <VideoAssistantVisual />
-              <span className="visual-caption">AUTOMATED VIDEO HIGHLIGHTS</span>
+              <span className="visual-caption">MOMENTS FORTS AUTOMATIQUES</span>
             </div>
 
             <span className="visual-number">
-              PROJECT 001
+              PROJET 001
             </span>
           </div>
 
           <div className="project-information">
             <div className="project-meta">
-              <span>PERSONAL PROJECT</span>
+              <span>PROJET PERSONNEL</span>
               <span>2026</span>
             </div>
 
@@ -328,7 +330,7 @@ function HomePage() {
               <span>Python</span>
               <span>OpenCV</span>
               <span>NumPy</span>
-              <span>Video Processing</span>
+              <span>Traitement vidéo</span>
             </div>
 
             <div className="hero-actions">
@@ -350,6 +352,11 @@ function HomePage() {
                 <ArrowUpRight size={18} />
               </a>
             </div>
+
+            <p className="project-note">
+              Application hébergée gratuitement sur Render : le premier
+              chargement peut prendre environ une minute.
+            </p>
           </div>
         </m.article>
 
@@ -366,15 +373,15 @@ function HomePage() {
 
             <div className="visual-label">
               <span className="status-dot" />
-              LLM / MULTI-AGENT SYSTEMS
+              LLM / SYSTÈMES MULTI-AGENTS
             </div>
 
             <div className="visual-center visual-center-anim">
               <DisputeAgentVisual />
-              <span className="visual-caption">AI MEDIATION RESEARCH</span>
+              <span className="visual-caption">RECHERCHE EN MÉDIATION IA</span>
             </div>
 
-            <span className="visual-number">PROJECT 002</span>
+            <span className="visual-number">PROJET 002</span>
           </div>
 
           <div className="project-information">
@@ -411,6 +418,45 @@ function HomePage() {
 
       </section>
 
+      {/* COMPÉTENCES */}
+      <m.section
+        className="skills-section"
+        id="skills"
+        initial={{ opacity: 0, y: 45 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
+        <div className="section-heading">
+          <div>
+            <span className="eyebrow">02 — COMPÉTENCES</span>
+
+            <h2>
+              Compétences<span>.</span>
+            </h2>
+          </div>
+
+          <p>
+            Les outils et méthodes que j'utilise, de la conception d'agents
+            basés sur des LLM au machine learning.
+          </p>
+        </div>
+
+        <div className="skills-grid">
+          {skills.map((group, index) => (
+            <article className="skill-card" key={group.title}>
+              <span className="skill-card-index">{String(index + 1).padStart(2, "0")}</span>
+              <h3>{group.title}</h3>
+              <ul className="skill-tags">
+                {group.items.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </div>
+      </m.section>
+
       {/* CREATIVE */}
       <m.section
         className="creative-section"
@@ -433,11 +479,11 @@ function HomePage() {
         }}
       >
         <span className="eyebrow">
-          02 — CREATIVE
+          03 — CRÉATIF
         </span>
 
         <h2>
-          Beyond the code<span>.</span>
+          Au-delà du code<span>.</span>
         </h2>
 
         <p>
@@ -478,11 +524,11 @@ function HomePage() {
         }}
       >
         <span className="eyebrow">
-          03 — ABOUT ME
+          04 — À PROPOS
         </span>
 
         <h2>
-          Technology with a creative mindset.
+          La technologie, avec un regard créatif.
         </h2>
 
         <p>
@@ -539,7 +585,7 @@ function HomePage() {
         </span>
 
         <p>
-          Engineering × AI × Visual Creation
+          Ingénierie × IA × Création visuelle
         </p>
 
         <div className="contact-details">
@@ -552,6 +598,16 @@ function HomePage() {
     <Phone size={18} />
     <span>07 83 93 98 93</span>
   </a>
+
+  <a href="https://github.com/Cyriacccc" target="_blank" rel="noopener noreferrer">
+    <GithubIcon size={17} />
+    <span>github.com/Cyriacccc</span>
+  </a>
+
+  <a href="https://www.linkedin.com/in/cyriac-dupouey-341751336/" target="_blank" rel="noopener noreferrer">
+    <LinkedinIcon size={17} />
+    <span>LinkedIn</span>
+  </a>
 </div>
         <small>
           © 2026 — CYRIAC DUPOUEY
@@ -561,7 +617,9 @@ function HomePage() {
   );
 }
 
-export default function App() {
+// Routes de l'application, partagées entre le navigateur (BrowserRouter)
+// et le prérendu au build (StaticRouter, voir src/entry-server.jsx).
+export function AppRoutes() {
   return (
     // LazyMotion + composants <m.*> : on n'embarque que les fonctions
     // d'animation utilisées (domAnimation) au lieu de tout framer-motion.
@@ -569,16 +627,22 @@ export default function App() {
     // pour les personnes ayant activé « réduire les animations » sur leur système.
     <LazyMotion features={domAnimation} strict>
       <MotionConfig reducedMotion="user">
-        <BrowserRouter>
-          <Suspense fallback={<div className="page-loading" aria-busy="true" />}>
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/projects/:slug" element={<ProjectPage />} />
-              <Route path="*" element={<HomePage />} />
-            </Routes>
-          </Suspense>
-        </BrowserRouter>
+        <Suspense fallback={<div className="page-loading" aria-busy="true" />}>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/projects/:slug" element={<ProjectPage />} />
+            <Route path="*" element={<HomePage />} />
+          </Routes>
+        </Suspense>
       </MotionConfig>
     </LazyMotion>
+  );
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
   );
 }

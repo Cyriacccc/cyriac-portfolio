@@ -16,6 +16,7 @@ const Navbar = () => {
 
       <nav className="nav-links">
         <a href="#projects">Projets</a>
+        <a href="#skills">Compétences</a>
         <a href="#creative">Vidéo</a>
         <a href="#about">À propos</a>
       </nav>

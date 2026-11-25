@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import Modal from "./Modal";
 import { Play, X, ArrowUpRight } from "lucide-react";
@@ -8,134 +8,136 @@ const videos = [
   {
     id: "video-1",
     title: "Cancun",
-    category: "Travel Film",
+    category: "Film de voyage",
     description: "Cancun pendant la coupe du monde",
     youtubeId: "Wjgg3IM3MlQ",
-    number: "01",
   },
   /*
   {
     id: "video-2",
     title: "MIAMI",
-    category: "Cinematic Travel",
+    category: "Voyage cinématique",
     description: "Une destination, une atmosphère.",
     youtubeId: "oRZ5p8ILF6Q",
-    number: "02",
   },
   */
   {
     id: "video-3",
     title: "New York",
-    category: "Creative Editing",
+    category: "Montage créatif",
     description: "Fast Life in NYC",
     youtubeId: "so7wb61BT94",
-    number: "03",
   },
 ];
+
+// Numéros affichés (01, 02…) calculés d'après l'ordre des vidéos actives.
+videos.forEach((video, index) => {
+  video.number = String(index + 1).padStart(2, "0");
+});
 
 const editingSteps = {
   "video-1": [
     {
       number: "01",
       title: "TRANSITIONS",
-      subtitle: "Connecting the shots",
+      subtitle: "Relier les plans",
       description:
         "Les transitions permettent de relier les plans et de maintenir la continuité visuelle du film. L'objectif est de créer un enchaînement fluide qui accompagne le spectateur dans le voyage.",
-      tag: "EDITING",
+      tag: "MONTAGE",
     },
     {
       number: "02",
-      title: "COLOR GRADING",
-      subtitle: "Building the atmosphere",
+      title: "ÉTALONNAGE",
+      subtitle: "Construire l'atmosphère",
       description:
         "Le travail colorimétrique contribue à donner une identité visuelle au film. Les couleurs, les contrastes et la luminosité participent à l'atmosphère générale des images.",
-      tag: "COLOR",
+      tag: "COULEUR",
     },
     {
       number: "03",
-      title: "MUSIC SYNC",
-      subtitle: "Editing to the rhythm",
+      title: "SYNCHRO MUSICALE",
+      subtitle: "Monter en rythme",
       description:
         "La synchronisation entre les images et la musique contribue au rythme du montage. Les changements de plans et les temps forts musicaux participent à la dynamique du film.",
       tag: "AUDIO",
     },
     {
       number: "04",
-      title: "MOTION & TITLES",
-      subtitle: "Adding visual identity",
+      title: "ANIMATIONS & TITRES",
+      subtitle: "Ajouter une identité visuelle",
       description:
         "Les titres et les animations permettent d'ajouter des informations et de renforcer l'identité visuelle du projet, tout en restant cohérents avec l'ambiance du film.",
-      tag: "MOTION",
+      tag: "ANIMATION",
     },
   ],
 
   "video-2": [
     {
       number: "01",
-      title: "AI VIDEO GENERATION",
-      subtitle: "Imagining new visuals",
+      title: "GÉNÉRATION VIDÉO PAR IA",
+      subtitle: "Imaginer de nouveaux visuels",
       description:
         "Pour le film de Miami, j'ai utilisé Highfield.ai, ainsi que d'autres outils de génération par intelligence artificielle, pour créer des séquences visuelles qui enrichissent le récit du voyage. L'objectif est d'explorer de nouvelles possibilités créatives au-delà des images capturées sur place.",
-      tag: "GENERATIVE AI",
+      tag: "IA GÉNÉRATIVE",
     },
     {
       number: "02",
-      title: "AI ANIMATIONS",
-      subtitle: "Bringing ideas to life",
+      title: "ANIMATIONS PAR IA",
+      subtitle: "Donner vie aux idées",
       description:
         "J'ai également exploré différents outils d'IA pour créer des animations et donner du mouvement à des éléments visuels. Ces séquences permettent d'introduire des effets créatifs et de renforcer l'identité visuelle du montage.",
-      tag: "AI ANIMATION",
+      tag: "ANIMATION IA",
     },
     {
       number: "03",
-      title: "CINEMATIC EDITING",
-      subtitle: "Building the visual story",
+      title: "MONTAGE CINÉMATIQUE",
+      subtitle: "Construire le récit visuel",
       description:
         "Les séquences filmées et les contenus générés par IA sont intégrés dans un montage cohérent. Le choix des plans, le rythme et les transitions permettent de construire une expérience visuelle fluide.",
-      tag: "EDITING",
+      tag: "MONTAGE",
     },
     {
       number: "04",
-      title: "MUSIC & ATMOSPHERE",
-      subtitle: "Creating the final mood",
+      title: "MUSIQUE & ATMOSPHÈRE",
+      subtitle: "Créer l'ambiance finale",
       description:
         "Le rythme musical, les contrastes et le traitement des images contribuent à créer une atmosphère cinématographique. Chaque élément est pensé pour renforcer l'immersion et accompagner le spectateur tout au long du film.",
-      tag: "SOUND & COLOR",
+      tag: "SON & COULEUR",
     },
   ],
 
   "video-3": [
     {
       number: "01",
-      title: "SHOT SELECTION",
-      subtitle: "Finding the right moments",
+      title: "SÉLECTION DES PLANS",
+      subtitle: "Trouver les bons moments",
       description:
         "La première étape consiste à sélectionner les plans les plus pertinents pour retranscrire l'énergie de New York. Les mouvements de caméra, les scènes urbaines et les changements de rythme contribuent à construire l'identité du film.",
-      tag: "STORYTELLING",
+      tag: "NARRATION",
     },
     {
       number: "02",
-      title: "FAST-PACED EDITING",
-      subtitle: "Capturing the city's energy",
+      title: "MONTAGE RYTHMÉ",
+      subtitle: "Capter l'énergie de la ville",
       description:
         "Le montage joue sur la durée des plans, les enchaînements et les variations de rythme pour retranscrire le dynamisme de la ville. L'objectif est de maintenir l'attention tout en conservant une progression visuelle cohérente.",
-      tag: "EDITING",
+      tag: "MONTAGE",
     },
     {
       number: "03",
-      title: "MUSIC SYNC",
-      subtitle: "Editing to the beat",
+      title: "SYNCHRO MUSICALE",
+      subtitle: "Monter sur le tempo",
       description:
         "La synchronisation entre les images et la musique structure le montage. Les changements de plans et les temps forts sonores participent à l'énergie générale de la vidéo.",
       tag: "AUDIO",
     },
     {
       number: "04",
-      title: "VISUAL CONSISTENCY",
-      subtitle: "Shaping the final look",
+      title: "COHÉRENCE VISUELLE",
+      subtitle: "Façonner le rendu final",
       description:
         "Le travail sur les couleurs, les contrastes et les transitions permet d'unifier les différents plans et de donner au film une identité visuelle cohérente.",
-      tag: "COLOR & FINISH",
+      tag: "COULEUR & FINITION",
     },
   ],
 };
@@ -199,7 +201,7 @@ function DaVinciIllustration({ video }) {
 
         <div className="davinci-heading-description">
           <strong>{video.title} — {video.category}</strong>
-          <span>From raw footage to final look.</span>
+          <span>Des images brutes au rendu final.</span>
           <span>Montage vidéo · Color grading</span>
         </div>
       </div>
@@ -278,8 +280,8 @@ function DaVinciIllustration({ video }) {
           </div>
 
           <div className="davinci-screen-footer">
-            <span>01 / EDITING TIMELINE</span>
-            <span>ASSEMBLY · RHYTHM · AUDIO</span>
+            <span>01 / TIMELINE DE MONTAGE</span>
+            <span>ASSEMBLAGE · RYTHME · AUDIO</span>
           </div>
         </div>
 
@@ -330,8 +332,8 @@ function DaVinciIllustration({ video }) {
           </div>
 
           <div className="davinci-screen-footer">
-            <span>02 / COLOR GRADING</span>
-            <span>COLOR · CONTRAST · MOOD</span>
+            <span>02 / ÉTALONNAGE</span>
+            <span>COULEUR · CONTRASTE · AMBIANCE</span>
           </div>
         </div>
       </div>
@@ -340,13 +342,13 @@ function DaVinciIllustration({ video }) {
       <div className="davinci-before-after">
         <div className={`davinci-before-after-image scene-${video.id}`}>
           <div className="davinci-before">
-            <span>BEFORE</span>
-            <small>RAW FOOTAGE</small>
+            <span>AVANT</span>
+            <small>IMAGES BRUTES</small>
           </div>
 
           <div className="davinci-after">
-            <span>AFTER</span>
-            <small>COLOR GRADED</small>
+            <span>APRÈS</span>
+            <small>ÉTALONNÉ</small>
           </div>
 
           <div className="davinci-before-after-divider">
@@ -355,8 +357,8 @@ function DaVinciIllustration({ video }) {
         </div>
 
         <div className="davinci-before-after-copy">
-          <span className="davinci-mini-label">03 / FINAL LOOK</span>
-          <h4>FROM RAW TO CINEMATIC.</h4>
+          <span className="davinci-mini-label">03 / RENDU FINAL</span>
+          <h4>DU BRUT AU CINÉMATIQUE.</h4>
 
           <p>
             Le travail colorimétrique permet d'harmoniser les plans,
@@ -373,7 +375,7 @@ function DaVinciIllustration({ video }) {
             CAMERA GEAR / 01—03
           </span>
 
-          <h4>CAPTURE THE MOMENT.</h4>
+          <h4>CAPTURER L'INSTANT.</h4>
 
           <div className="davinci-camera-list">
             {cameras.map((camera) => (
@@ -392,10 +394,10 @@ function DaVinciIllustration({ video }) {
 
         <div className="davinci-info-card davinci-software-card">
           <span className="davinci-mini-label">
-            SOFTWARE & CREATIVE TOOLS
+            LOGICIELS & OUTILS CRÉATIFS
           </span>
 
-          <h4>TOOLS BEHIND THE FILM.</h4>
+          <h4>LES OUTILS DU FILM.</h4>
 
           <div className="davinci-software-list">
             <div className="davinci-software-item">
@@ -406,7 +408,7 @@ function DaVinciIllustration({ video }) {
               </div>
 
               <strong>DaVinci Resolve</strong>
-              <span>EDITING & COLOR</span>
+              <span>MONTAGE & COULEUR</span>
             </div>
 
             {isMiami && (
@@ -419,15 +421,15 @@ function DaVinciIllustration({ video }) {
                 <div className="davinci-ai-icon">AI</div>
 
                 <strong>Highfield.ai</strong>
-                <span>AI VIDEO GENERATION ↗</span>
+                <span>GÉNÉRATION VIDÉO IA ↗</span>
               </a>
             )}
 
             {!isMiami && (
               <div className="davinci-other-tools">
                 <div className="davinci-other-tools-icon">✳</div>
-                <strong>Creative tools</strong>
-                <span>STORYTELLING & MOTION</span>
+                <strong>Outils créatifs</strong>
+                <span>NARRATION & ANIMATION</span>
               </div>
             )}
           </div>
@@ -437,13 +439,13 @@ function DaVinciIllustration({ video }) {
       {/* BANDEAU DE SYNTHÈSE */}
       <div className="davinci-workflow-footer">
         <span>▣</span>
-        <span>VIDEO EDITING</span>
+        <span>MONTAGE</span>
         <i />
-        <span>COLOR GRADING</span>
+        <span>ÉTALONNAGE</span>
         <i />
-        <span>{isMiami ? "GENERATIVE AI" : "STORYTELLING"}</span>
+        <span>{isMiami ? "IA GÉNÉRATIVE" : "NARRATION"}</span>
         <i />
-        <span>FINAL CUT</span>
+        <span>MONTAGE FINAL</span>
       </div>
     </section>
   );
@@ -452,6 +454,12 @@ function DaVinciIllustration({ video }) {
 function VideoGallery() {
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [hoveredVideo, setHoveredVideo] = useState(null);
+  // L'aperçu YouTube (lourd) ne se charge qu'après 450 ms de survol,
+  // pour ne pas le télécharger quand la souris ne fait que passer.
+  const [previewVideo, setPreviewVideo] = useState(null);
+  const previewTimer = useRef(null);
+
+  useEffect(() => () => clearTimeout(previewTimer.current), []);
   const [breakdownVideo, setBreakdownVideo] = useState(null);
   const [activeStep, setActiveStep] = useState(0);
 
@@ -491,13 +499,13 @@ function VideoGallery() {
           <div>
             <span className="video-gallery-eyebrow">
               <span className="gallery-dot" />
-              CREATIVE PORTFOLIO / 002
+              PORTFOLIO CRÉATIF
             </span>
 
             <h2>
-              BEYOND THE
+              AU-DELÀ
               <br />
-              <span>FRAME.</span>
+              <span>DU CADRE.</span>
             </h2>
           </div>
 
@@ -540,7 +548,11 @@ function VideoGallery() {
                   index === 0 ? "video-card-featured" : ""
                 }`}
                 onClick={() => setSelectedVideo(video)}
-                onMouseEnter={() => setHoveredVideo(video.id)}
+                onMouseEnter={() => {
+                  setHoveredVideo(video.id);
+                  clearTimeout(previewTimer.current);
+                  previewTimer.current = setTimeout(() => setPreviewVideo(video.id), 450);
+                }}
                 onMouseMove={(event) => {
                   const rect = event.currentTarget.getBoundingClientRect();
                   const x =
@@ -559,6 +571,8 @@ function VideoGallery() {
                 }}
                 onMouseLeave={(event) => {
                   setHoveredVideo(null);
+                  clearTimeout(previewTimer.current);
+                  setPreviewVideo(null);
                   event.currentTarget.style.setProperty("--pointer-x", "0px");
                   event.currentTarget.style.setProperty("--pointer-y", "0px");
                 }}
@@ -582,11 +596,11 @@ function VideoGallery() {
                       event.currentTarget.src = `https://img.youtube.com/vi/${video.youtubeId}/hqdefault.jpg`;
                     }}
                     style={{
-                      opacity: hoveredVideo === video.id ? 0 : 1,
+                      opacity: previewVideo === video.id ? 0 : 1,
                     }}
                   />
 
-                  {hoveredVideo === video.id && (
+                  {previewVideo === video.id && (
                     <iframe
                       className="video-hover-preview"
                       src={`https://www.youtube-nocookie.com/embed/${video.youtubeId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${video.youtubeId}&playsinline=1&rel=0`}
@@ -654,11 +668,11 @@ function VideoGallery() {
                 aria-label={`Découvrir le processus de création de ${video.title}`}
               >
                 <span className="video-breakdown-trigger-number">
-                  {video.number} / BEHIND THE FILM
+                  {video.number} / COULISSES
                 </span>
 
                 <span className="video-breakdown-trigger-label">
-                  EXPLORE THE PROCESS
+                  DÉCOUVRIR LE PROCESSUS
                 </span>
 
                 <ArrowUpRight size={19} />
@@ -675,8 +689,8 @@ function VideoGallery() {
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          <span>SELECTED WORKS</span>
-          <span>VIDEO EDITING · STORYTELLING · COLOR GRADING</span>
+          <span>SÉLECTION</span>
+          <span>MONTAGE · NARRATION · ÉTALONNAGE</span>
         </m.div>
       </div>
 
@@ -758,7 +772,7 @@ function VideoGallery() {
         {breakdownVideo && (
           <Modal
             className="breakdown-modal"
-            label={`Behind the Film — ${breakdownVideo.title}`}
+            label={`Coulisses du film — ${breakdownVideo.title}`}
             onClose={closeBreakdown}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -791,19 +805,19 @@ function VideoGallery() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 }}
                 >
-                  CREATIVE PROCESS / {breakdownVideo.number}
+                  PROCESSUS CRÉATIF / {breakdownVideo.number}
                 </m.span>
 
                 <h2>
-                  BEHIND
+                  LES COULISSES
                   <br />
-                  <span>THE FILM.</span>
+                  <span>DU FILM.</span>
                 </h2>
 
                 <p>
                   {breakdownVideo.title} — {breakdownVideo.category}
                   <br />
-                  Exploring the creative process behind the final cut.
+                  Le processus créatif derrière le montage final.
                 </p>
               </div>
 
@@ -824,7 +838,7 @@ function VideoGallery() {
               {/* TIMELINE INTERACTIVE */}
               <div className="breakdown-process">
                 <div className="breakdown-process-heading">
-                  <span>THE WORKFLOW</span>
+                  <span>LES ÉTAPES</span>
                   <span>
                     {String(activeStep + 1).padStart(2, "0")} /{" "}
                     {String(currentSteps.length).padStart(2, "0")}
@@ -836,13 +850,29 @@ function VideoGallery() {
                   className="breakdown-timeline"
                   role="tablist"
                   aria-label={`Étapes du montage de ${breakdownVideo.title}`}
+                  onKeyDown={(event) => {
+                    const total = currentSteps.length;
+                    const keys = {
+                      ArrowRight: (activeStep + 1) % total,
+                      ArrowLeft: (activeStep - 1 + total) % total,
+                      Home: 0,
+                      End: total - 1,
+                    };
+                    if (!(event.key in keys)) return;
+                    event.preventDefault();
+                    setActiveStep(keys[event.key]);
+                    document.getElementById(`breakdown-tab-${keys[event.key]}`)?.focus();
+                  }}
                 >
                   {currentSteps.map((step, index) => (
                     <button
                       type="button"
                       key={`${breakdownVideo.id}-${step.number}`}
                       role="tab"
+                      id={`breakdown-tab-${index}`}
                       aria-selected={activeStep === index}
+                      aria-controls="breakdown-panel"
+                      tabIndex={activeStep === index ? 0 : -1}
                       className={`breakdown-step ${
                         activeStep === index ? "is-active" : ""
                       }`}
@@ -867,6 +897,9 @@ function VideoGallery() {
                   <AnimatePresence mode="wait">
                     <m.div
                       key={`${breakdownVideo.id}-${activeStep}`}
+                      role="tabpanel"
+                      id="breakdown-panel"
+                      aria-labelledby={`breakdown-tab-${activeStep}`}
                       initial={{
                         opacity: 0,
                         y: 12,
@@ -924,7 +957,7 @@ function VideoGallery() {
                         )
                       }
                     >
-                      ← PREVIOUS
+                      ← PRÉCÉDENT
                     </button>
 
                     <button
@@ -935,7 +968,7 @@ function VideoGallery() {
                         )
                       }
                     >
-                      NEXT STEP →
+                      ÉTAPE SUIVANTE →
                     </button>
                   </div>
                 </div>
@@ -945,25 +978,25 @@ function VideoGallery() {
               {/* FICHE TECHNIQUE */}
               <div className="breakdown-footer">
                 <div>
-                  <span className="breakdown-footer-label">PROJECT</span>
+                  <span className="breakdown-footer-label">PROJET</span>
                   <span>{breakdownVideo.category}</span>
                 </div>
 
                 <div>
-                  <span className="breakdown-footer-label">SOFTWARE</span>
+                  <span className="breakdown-footer-label">LOGICIELS</span>
                   <span>
                     {breakdownVideo.id === "video-2"
-                      ? "Video editing · AI tools"
+                      ? "Montage vidéo · Outils IA"
                       : "DaVinci Resolve"}
                   </span>
                 </div>
 
                 <div>
-                  <span className="breakdown-footer-label">FOCUS</span>
+                  <span className="breakdown-footer-label">AXES</span>
                   <span>
                     {breakdownVideo.id === "video-2"
-                      ? "AI · Animation · Editing"
-                      : "Editing · Color · Motion"}
+                      ? "IA · Animation · Montage"
+                      : "Montage · Couleur · Animation"}
                   </span>
                 </div>
               </div>

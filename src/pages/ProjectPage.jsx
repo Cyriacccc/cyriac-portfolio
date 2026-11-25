@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowDown, ArrowUpRight, Play, X, Maximize2, ChevronRight, C
 import { Link, Navigate, useParams } from "react-router-dom";
 import Modal from "../components/Modal";
 import { getProject } from "../data/projects";
+import usePageMeta from "../hooks/usePageMeta";
 import "../styles/global.css";
 
 /*
@@ -115,6 +116,7 @@ export default function ProjectPage() {
   const { slug } = useParams();
   const project = getProject(slug);
   const [activeDemo, setActiveDemo] = useState(null);
+  usePageMeta(project?.pageTitle, project?.description);
 
   if (!project) return <Navigate to="/" replace />;
 
@@ -126,20 +128,21 @@ export default function ProjectPage() {
 
   return (
     <main className="va-page">
-      {/* React 19 place ces balises dans le <head> */}
-      <title>{project.pageTitle}</title>
-      <meta name="description" content={project.description} />
-
       {/* NAVIGATION */}
       <nav className="va-nav">
         <Link to="/" className="va-back">
           <ArrowLeft size={17} />
-          <span>BACK TO PORTFOLIO</span>
+          <span>RETOUR AU PORTFOLIO</span>
         </Link>
 
         <span className="va-nav-label">
-          PROJECT {project.number} <span>/</span> {project.navTitle}
+          PROJET {project.number} <span>/</span> {project.navTitle}
         </span>
+
+        <div className="va-nav-links">
+          <a href="/#projects">PROJETS</a>
+          <a href="/#contact">CONTACT</a>
+        </div>
       </nav>
 
       {/* HERO */}
@@ -185,7 +188,7 @@ export default function ProjectPage() {
         </m.div>
 
         <a href="#overview" className="va-scroll-indicator">
-          <span>SCROLL TO EXPLORE</span>
+          <span>DÉFILER POUR EXPLORER</span>
           <ArrowDown size={15} />
         </a>
       </section>
@@ -235,7 +238,7 @@ export default function ProjectPage() {
                   type="button"
                   className="va-demo-thumbnail"
                   onClick={() => setActiveDemo(demo)}
-                  aria-label={`Watch ${demo.title}`}
+                  aria-label={`Regarder : ${demo.title}`}
                 >
                   <img
                     className="va-demo-thumbnail-video"
@@ -257,7 +260,7 @@ export default function ProjectPage() {
                   </span>
 
                   <span className="va-demo-watch">
-                    WATCH DEMONSTRATION
+                    VOIR LA DÉMONSTRATION
                     <ArrowUpRight size={15} />
                   </span>
                 </button>
@@ -277,7 +280,7 @@ export default function ProjectPage() {
 
           <p className="va-caption">
             <Maximize2 size={14} />
-            Select a video to open the full player.
+            Sélectionnez une vidéo pour ouvrir le lecteur.
           </p>
         </section>
       )}
@@ -311,7 +314,7 @@ export default function ProjectPage() {
                   type="button"
                   className="va-video-modal-close"
                   onClick={() => setActiveDemo(null)}
-                  aria-label="Close video"
+                  aria-label="Fermer la vidéo"
                 >
                   <X size={23} />
                 </button>
@@ -501,7 +504,7 @@ export default function ProjectPage() {
       <footer className="va-footer">
         <Link to="/" className="va-back">
           <ArrowLeft size={17} />
-          BACK TO PORTFOLIO
+          RETOUR AU PORTFOLIO
         </Link>
 
         <span>CYRIAC DUPOUEY · 2026</span>

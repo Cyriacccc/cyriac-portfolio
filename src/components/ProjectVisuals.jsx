@@ -87,16 +87,16 @@ export function VideoAssistantVisual() {
             )}
           </g>
         ))}
-        <text className="pv-mono" x="0" y="62">FRAMES</text>
-        <text className="pv-mono pv-accent" x="400" y="62" textAnchor="end">HIGHLIGHTS</text>
+        <text className="pv-mono" x="0" y="62">IMAGES</text>
+        <text className="pv-mono pv-accent" x="400" y="62" textAnchor="end">MOMENTS FORTS</text>
 
         {/* Courbe du score de mouvement */}
         <line className="pv-axis" x1="0" y1={CHART_BOTTOM} x2="400" y2={CHART_BOTTOM} />
         <polygon className="pv-area" points={areaPoints} clipPath="url(#va-above-threshold)" />
         <polyline className="pv-line" points={linePoints} />
         <line className="pv-threshold" x1="0" y1={THRESHOLD_Y} x2="400" y2={THRESHOLD_Y} />
-        <text className="pv-mono" x="0" y={THRESHOLD_Y - 6}>THRESHOLD</text>
-        <text className="pv-mono" x="0" y="248">MOTION SCORE</text>
+        <text className="pv-mono" x="0" y={THRESHOLD_Y - 6}>SEUIL</text>
+        <text className="pv-mono" x="0" y="248">SCORE DE MOUVEMENT</text>
 
         {/* Tête de lecture */}
         <g className="pv-playhead" style={{ animationDuration: `${VA_DURATION}s` }}>
@@ -113,9 +113,9 @@ export function VideoAssistantVisual() {
 /* ------------------------------------------------------------------ */
 
 const NODES = {
-  a: { x: 70, y: 140, label: "PARTY A" },
-  b: { x: 330, y: 140, label: "PARTY B" },
-  m: { x: 200, y: 48, label: "MEDIATOR" },
+  a: { x: 70, y: 140, label: "PARTIE A" },
+  b: { x: 330, y: 140, label: "PARTIE B" },
+  m: { x: 200, y: 48, label: "MÉDIATEUR" },
 };
 
 // Messages échangés (départ, arrivée, moment du départ en secondes sur 8 s)
@@ -171,15 +171,15 @@ export function DisputeAgentVisual() {
 
         {/* Accord */}
         <g className="pv-agreement">
-          <rect x="146" y="124" width="108" height="24" rx="12" />
-          <text className="pv-mono" x="200" y="140" textAnchor="middle">✓ AGREEMENT</text>
+          <rect x="156" y="124" width="88" height="24" rx="12" />
+          <text className="pv-mono" x="200" y="140" textAnchor="middle">✓ ACCORD</text>
         </g>
 
         {/* Jury de trois LLM */}
         {[180, 200, 220].map((x, i) => (
           <circle key={x} className="pv-judge" cx={x} cy="222" r="6.5" style={{ animationDelay: `${i * 0.25}s` }} />
         ))}
-        <text className="pv-mono" x="200" y="246" textAnchor="middle">LLM JURY</text>
+        <text className="pv-mono" x="200" y="246" textAnchor="middle">JURY DE LLM</text>
       </svg>
     </div>
   );

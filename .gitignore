@@ -53,3 +53,6 @@ Thumbs.db
 # Large video files hosted separately
 public/videos/video-assistant-app.mp4
 public/videos/video-assistant-technique.mp4
+
+# Build du prérendu (scripts/prerender.mjs)
+dist-server/
