@@ -25,6 +25,7 @@ import HeroVideo from "./components/HeroVideo";
 import { VideoAssistantVisual, DisputeAgentVisual } from "./components/ProjectVisuals";
 import { GithubIcon, LinkedinIcon } from "./components/BrandIcons";
 import PortfolioAssistant from "./components/PortfolioAssistant";
+import { Analytics } from "@vercel/analytics/react";
 import { skills } from "./data/skills";
 
 // Pages projet chargées seulement quand on les ouvre (JS séparé).
@@ -639,6 +640,9 @@ export function AppRoutes() {
 
         {/* Assistant IA, présent sur toutes les pages */}
         <PortfolioAssistant />
+
+        {/* Statistiques de visite anonymes (Vercel Web Analytics : sans cookies) */}
+        <Analytics />
       </MotionConfig>
     </LazyMotion>
   );

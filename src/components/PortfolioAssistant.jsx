@@ -149,6 +149,7 @@ export default function PortfolioAssistant() {
 
       <p className="pa-pied">
         Réponses générées par IA à partir du portfolio, du CV, de LinkedIn et de GitHub.
+        Les questions sont enregistrées anonymement ; vos coordonnées seulement si vous les donnez.
         {restants !== null && ` · ${restants} question${restants > 1 ? "s" : ""} restante${restants > 1 ? "s" : ""} aujourd'hui`}
       </p>
     </section>

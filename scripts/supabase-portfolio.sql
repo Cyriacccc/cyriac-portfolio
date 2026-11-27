@@ -1,4 +1,6 @@
--- Assistant du portfolio : limite de messages par visiteur et par jour, et plafond global.
+-- Assistant du portfolio : limite de messages par visiteur et par jour, plafond global,
+-- journal anonyme des questions et coordonnées laissées volontairement.
+-- (On peut relancer tout le fichier sans risque : « if not exists » et « or replace ».)
 -- À exécuter dans le SQL Editor de Supabase (projet du chatbot), AVANT de mettre l'assistant en ligne.
 
 begin;
@@ -53,5 +55,34 @@ $function$;
 
 revoke execute on function public.portfolio_compter(text, integer, integer) from public, anon, authenticated;
 grant execute on function public.portfolio_compter(text, integer, integer) to service_role;
+
+
+-- ---------------------------------------------------------------------
+-- Les questions posées à l'assistant (anonymes : aucun nom, aucune adresse IP).
+-- « visiteur » est l'empreinte du jour : elle permet de regrouper les questions d'une même conversation.
+create table if not exists public.portfolio_conversations (
+  id         bigint generated always as identity primary key,
+  visiteur   text        not null,
+  question   text        not null,
+  reponse    text        not null,
+  date       timestamptz not null default now()
+);
+alter table public.portfolio_conversations enable row level security;
+grant select, insert, delete on public.portfolio_conversations to service_role;
+
+
+-- ---------------------------------------------------------------------
+-- Les coordonnées que des visiteurs ont CHOISI de laisser via l'assistant.
+create table if not exists public.portfolio_contacts (
+  id         bigint generated always as identity primary key,
+  nom        text        not null,
+  entreprise text,
+  email      text,
+  telephone  text,
+  message    text,
+  date       timestamptz not null default now()
+);
+alter table public.portfolio_contacts enable row level security;
+grant select, insert, delete on public.portfolio_contacts to service_role;
 
 commit;
