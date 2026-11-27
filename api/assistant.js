@@ -5,13 +5,15 @@
 //   3. envoie la question à Claude avec tout ce qu'il sait sur Cyriac (api/_connaissances.js)
 //   4. donne à Claude un outil pour enregistrer les coordonnées qu'un visiteur CHOISIT de laisser
 //   5. enregistre la question et la réponse, de façon anonyme (pour savoir ce qui intéresse les visiteurs)
+//   6. si le message est le code secret de Cyriac : affiche son rapport privé (visites, questions, contacts)
 // Variables d'environnement (Vercel → Settings → Environment Variables) :
-//   ANTHROPIC_API_KEY, SUPABASE_URL, SUPABASE_SERVICE_KEY
+//   ANTHROPIC_API_KEY, SUPABASE_URL, SUPABASE_SERVICE_KEY, ADMIN_CODE (le code secret)
 // Elles restent sur le serveur : le navigateur des visiteurs ne les voit jamais.
 // =====================================================================
 import Anthropic from "@anthropic-ai/sdk";
-import { createHash } from "node:crypto";
 import { CONNAISSANCES } from "./_connaissances.js";
+import { empreinteVisiteur, supabase, memeTexte } from "./_outils.js";
+import { rapportPourCyriac } from "./_rapport.js";
 
 const MODELE = "claude-haiku-5-5";   // le modèle le moins cher
 const LIMITE_VISITEUR = 7;           // messages par visiteur et par jour
@@ -63,29 +65,6 @@ function lireCorps(req) {
   return req.body || {};
 }
 
-// Empreinte anonyme du visiteur : on ne garde jamais son adresse IP en clair.
-// Le jour fait partie du calcul, donc l'empreinte change chaque jour.
-function empreinteVisiteur(req) {
-  const ip = String(req.headers["x-forwarded-for"] || "").split(",")[0].trim() || req.socket?.remoteAddress || "inconnu";
-  const jour = new Date().toISOString().slice(0, 10);
-  return createHash("sha256").update(`${ip}|${jour}|${process.env.SUPABASE_SERVICE_KEY}`).digest("hex").slice(0, 32);
-}
-
-// Petit appel à la base Supabase (API REST), avec la clé secrète du serveur
-async function supabase(chemin, corps) {
-  const url = String(process.env.SUPABASE_URL || "").trim().replace(/\/+$/, "").replace(/\/rest\/v1$/, "");
-  const cle = process.env.SUPABASE_SERVICE_KEY;
-  const enTetes = { apikey: cle, Authorization: `Bearer ${cle}`, "Content-Type": "application/json" };
-  if (!chemin.startsWith("rpc/")) enTetes.Prefer = "return=minimal";   // insertion : pas besoin de réponse
-  const reponse = await fetch(`${url}/rest/v1/${chemin}`, {
-    method: "POST",
-    headers: enTetes,
-    body: JSON.stringify(corps),
-  });
-  if (!reponse.ok) throw new Error(`Supabase ${chemin} : ${reponse.status} ${await reponse.text()}`);
-  return reponse.status === 204 ? null : reponse.json().catch(() => null);
-}
-
 // Outil laisser_coordonnees : vérifie un minimum puis enregistre
 async function laisserCoordonnees(entree) {
   const propre = (v, max) => (typeof v === "string" ? v.trim().slice(0, max) : "") || null;
@@ -119,6 +98,20 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Message vide." });
     }
     const question = messages[messages.length - 1].content;
+
+    // Si le code secret a été tapé plus tôt dans la conversation, on retire le code et le rapport
+    // de l'historique : ils ne doivent jamais être envoyés à Claude.
+    if (process.env.ADMIN_CODE) {
+      const code = process.env.ADMIN_CODE.trim();
+      messages = messages.filter((m, i) => !(m.role === "user" && memeTexte(m.content, code)) &&
+        !(m.role === "assistant" && i > 0 && messages[i - 1].role === "user" && memeTexte(messages[i - 1].content, code)));
+    }
+
+    // ---- Code secret de Cyriac : rapport privé, sans passer par Claude et sans rien enregistrer.
+    // Le code est dans la variable Vercel ADMIN_CODE (jamais dans ce fichier, qui est public sur GitHub).
+    if (process.env.ADMIN_CODE && memeTexte(question, process.env.ADMIN_CODE.trim())) {
+      return res.status(200).json({ reponse: await rapportPourCyriac() });
+    }
 
     // ---- 2. Les limites
     const visiteur = empreinteVisiteur(req);

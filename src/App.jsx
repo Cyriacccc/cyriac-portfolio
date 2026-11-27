@@ -26,6 +26,7 @@ import { VideoAssistantVisual, DisputeAgentVisual } from "./components/ProjectVi
 import { GithubIcon, LinkedinIcon } from "./components/BrandIcons";
 import PortfolioAssistant from "./components/PortfolioAssistant";
 import { Analytics } from "@vercel/analytics/react";
+import CompteurVisites from "./components/CompteurVisites";
 import { skills } from "./data/skills";
 
 // Pages projet chargées seulement quand on les ouvre (JS séparé).
@@ -643,6 +644,9 @@ export function AppRoutes() {
 
         {/* Statistiques de visite anonymes (Vercel Web Analytics : sans cookies) */}
         <Analytics />
+
+        {/* Compteur de visites anonyme (lu par le code secret de l'assistant) */}
+        <CompteurVisites />
       </MotionConfig>
     </LazyMotion>
   );

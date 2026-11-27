@@ -85,4 +85,20 @@ create table if not exists public.portfolio_contacts (
 alter table public.portfolio_contacts enable row level security;
 grant select, insert, delete on public.portfolio_contacts to service_role;
 
+
+-- ---------------------------------------------------------------------
+-- Les pages vues (anonymes : pas de cookies, pas d'adresse IP en clair).
+create table if not exists public.portfolio_visites (
+  id        bigint generated always as identity primary key,
+  visiteur  text        not null,   -- empreinte du jour
+  page      text        not null,   -- ex : /projects/dispute-agent
+  source    text        not null,   -- d'où vient le visiteur : linkedin.com, google, direct...
+  pays      text        not null,   -- code pays fourni par Vercel (FR, CA...)
+  appareil  text        not null,   -- ordinateur, téléphone, tablette
+  date      timestamptz not null default now()
+);
+create index if not exists portfolio_visites_date on public.portfolio_visites (date);
+alter table public.portfolio_visites enable row level security;
+grant select, insert, delete on public.portfolio_visites to service_role;
+
 commit;

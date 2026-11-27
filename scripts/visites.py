@@ -57,8 +57,32 @@ def main():
 
     contacts = lire("portfolio_contacts", depuis)
     conversations = lire("portfolio_conversations", depuis)
+    try:
+        visites = lire("portfolio_visites", depuis)
+    except Exception:
+        visites = []   # table pas encore créée
 
     print(f"=== RAPPORT DES {jours} DERNIERS JOURS ===\n")
+
+    # Visites : un visiteur = une empreinte sur une journée ; sa provenance = sa première page
+    premieres = {}
+    for v in visites:
+        cle = (v["visiteur"], v["date"][:10])
+        if cle not in premieres or v["date"] < premieres[cle]["date"]:
+            premieres[cle] = v
+
+    def top(valeurs, n=5):
+        comptes = defaultdict(int)
+        for x in valeurs:
+            comptes[x] += 1
+        total = len(valeurs) or 1
+        return " · ".join(f"{k} {round(100 * c / total)} %" for k, c in sorted(comptes.items(), key=lambda kv: -kv[1])[:n]) or "—"
+
+    print(f"--- {len(premieres)} visiteur(s), {len(visites)} page(s) vue(s)")
+    print(f"Provenance : {top([v['source'] for v in premieres.values()])}")
+    print(f"Pays : {top([v['pays'] for v in premieres.values()])}")
+    print(f"Appareils : {top([v['appareil'] for v in premieres.values()], 3)}")
+    print(f"Pages : {top([v['page'] for v in visites])}\n")
     print(f"--- {len(contacts)} visiteur(s) ont laissé leurs coordonnées")
     for c in contacts:
         details = " · ".join(x for x in [c.get("entreprise"), c.get("email"), c.get("telephone")] if x)
