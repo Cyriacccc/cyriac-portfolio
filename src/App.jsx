@@ -24,6 +24,7 @@ import Navbar from "./components/Navbar";
 import HeroVideo from "./components/HeroVideo";
 import { VideoAssistantVisual, DisputeAgentVisual } from "./components/ProjectVisuals";
 import { GithubIcon, LinkedinIcon } from "./components/BrandIcons";
+import PortfolioAssistant from "./components/PortfolioAssistant";
 import { skills } from "./data/skills";
 
 // Pages projet chargées seulement quand on les ouvre (JS séparé).
@@ -635,6 +636,9 @@ export function AppRoutes() {
             <Route path="*" element={<HomePage />} />
           </Routes>
         </Suspense>
+
+        {/* Assistant IA, présent sur toutes les pages */}
+        <PortfolioAssistant />
       </MotionConfig>
     </LazyMotion>
   );
