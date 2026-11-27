@@ -8,11 +8,13 @@
   bottom: 24px;
   z-index: 900;
 
+  /* Petit bouton rond : le texte n'apparaît qu'au survol, pour ne pas cacher le contenu du site */
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  min-height: 48px;
-  padding: 0 20px 0 16px;
+  justify-content: center;
+  height: 52px;
+  min-width: 52px;
+  padding: 0 16px;
 
   border: 1px solid rgba(255, 92, 32, 0.6);
   border-radius: 999px;
@@ -26,9 +28,29 @@
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-.pa-bulle:hover {
+.pa-bulle svg {
+  flex: none;
+}
+
+.pa-bulle span {
+  max-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  opacity: 0;
+  transition: max-width 0.25s ease, opacity 0.2s ease, margin 0.25s ease;
+}
+
+.pa-bulle:hover,
+.pa-bulle:focus-visible {
   transform: translateY(-2px);
   box-shadow: 0 18px 40px -12px rgba(255, 92, 32, 0.85);
+}
+
+.pa-bulle:hover span,
+.pa-bulle:focus-visible span {
+  max-width: 140px;
+  margin-left: 10px;
+  opacity: 1;
 }
 
 .pa-bulle:focus-visible {
@@ -244,6 +266,17 @@
   text-align: center;
 }
 
+/* Écrans moyens : la bulle se rapproche du bord pour laisser la place aux boutons GitHub / LinkedIn */
+@media (max-width: 1180px) {
+  .pa-bulle {
+    right: 14px;
+    bottom: 16px;
+    height: 48px;
+    min-width: 48px;
+    padding: 0 14px;
+  }
+}
+
 @media (max-width: 600px) {
   .pa-bulle {
     right: 14px;
@@ -260,6 +293,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .pa-bulle { transition: none; }
+  .pa-bulle,
+  .pa-bulle span { transition: none; }
   .pa-attente span { animation: none; opacity: 0.6; }
 }

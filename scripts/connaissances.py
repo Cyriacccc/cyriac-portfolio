@@ -20,7 +20,8 @@ from pathlib import Path
 
 RACINE = Path(__file__).resolve().parent.parent
 GITHUB = "Cyriacccc"
-DEPOTS_EXCLUS = {"hello-xorld"}          # dépôts publics à ne pas présenter (vides, sans intérêt...)
+DEPOTS_EXCLUS = {"hello-xorld", "bodycount"}   # dépôts à ne jamais présenter, même s'ils deviennent publics
+MOTS_INTERDITS = ["bodycount"]          # si l'un de ces mots apparaît quelque part, le script s'arrête
 MAX_README = 3000                       # caractères gardés par README
 
 
@@ -78,7 +79,7 @@ def github():
     depots = json.loads(lire_url(f"https://api.github.com/users/{GITHUB}/repos?per_page=100&type=owner&sort=updated"))
     parties = []
     for d in depots:
-        if d["fork"] or d["private"] or d["name"] in DEPOTS_EXCLUS:
+        if d["fork"] or d["private"] or d["name"].lower() in DEPOTS_EXCLUS:
             continue
         try:
             readme = lire_url(f"https://api.github.com/repos/{GITHUB}/{d['name']}/readme", "application/vnd.github.raw")
@@ -102,6 +103,11 @@ def main():
         f"## 3. LE PROFIL LINKEDIN\n\n{(RACINE / 'scripts' / 'sources' / 'linkedin.md').read_text(encoding='utf-8')}\n\n"
         f"## 4. LES DÉPÔTS GITHUB PUBLICS (github.com/{GITHUB})\n\n{github()}\n"
     )
+    # Garde-fou : on refuse de publier des connaissances qui mentionnent un sujet interdit
+    for mot in MOTS_INTERDITS:
+        if re.search(mot.replace(" ", r"\s*"), texte, re.IGNORECASE):
+            raise SystemExit(f"ARRÊT : « {mot} » apparaît dans les connaissances. Retire-le de sa source avant de relancer.")
+
     sortie = RACINE / "api" / "_connaissances.js"
     sortie.parent.mkdir(exist_ok=True)
     sortie.write_text(
